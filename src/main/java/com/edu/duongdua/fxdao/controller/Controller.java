@@ -13,7 +13,7 @@ public class Controller extends Main
     public ClassesDAO classesDao = new ClassesDAO();;
     public AccountDAO accountDAO = new AccountDAO();
 
-    public List<Classes> classesList;
-    public List<Account> teachersList;
-    public List<Account> studentsList;
+    public List<Classes> classesList = classesDao.getAllClasses();
+    public List<Account> teachersList = accountDAO.getAllTeacher();
+    public List<Account> studentsList = accountDAO.getAllStudent();
 }
