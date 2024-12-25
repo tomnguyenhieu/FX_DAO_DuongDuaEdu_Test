@@ -23,6 +23,23 @@ public class Account extends Model{
     private String createdAt;
     private String updatedAt;
 
+    public Account(int id, String email, String password, String name, int age, String gender, String phone, String address, int classId, String pName, String pEmail, String pPhone, int fee, String status) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.phone = phone;
+        this.address = address;
+        this.classId = classId;
+        this.pName = pName;
+        this.pEmail = pEmail;
+        this.pPhone = pPhone;
+        this.fee = fee;
+        this.status = status;
+    }
+
     public Account(){
         super();
     }
@@ -173,27 +190,27 @@ public class Account extends Model{
         this.className = className;
     }
 
-    public String getpName() {
+    public String getPName() {
         return pName;
     }
 
-    public void setpName(String pName) {
+    public void setPName(String pName) {
         this.pName = pName;
     }
 
-    public String getpEmail() {
+    public String getPEmail() {
         return pEmail;
     }
 
-    public void setpEmail(String pEmail) {
+    public void setPEmail(String pEmail) {
         this.pEmail = pEmail;
     }
 
-    public String getpPhone() {
+    public String getPPhone() {
         return pPhone;
     }
 
-    public void setpPhone(String pPhone) {
+    public void setPPhone(String pPhone) {
         this.pPhone = pPhone;
     }
 

@@ -182,7 +182,7 @@ public class ManageClassController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         classesDao = new ClassesDAO();
-        classesList = classesDao.getAllClasses();
+//        classesList = classesDao.getAllClasses();
 
 //        displayClass();
     }
