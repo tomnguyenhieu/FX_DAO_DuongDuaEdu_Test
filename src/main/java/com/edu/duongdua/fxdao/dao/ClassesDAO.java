@@ -13,6 +13,7 @@ public class ClassesDAO extends Classes
 {
     private Connection conn = super.getConnection();
 
+    // Lấy danh sách các lớp có trong database
     public List<Classes> getAllClasses()
     {
         List<Classes> classes = new ArrayList<>();
@@ -34,5 +35,23 @@ public class ClassesDAO extends Classes
             throw new RuntimeException(e);
         }
         return classes;
+    }
+
+    // Thêm mới lớp vào trong database
+    public boolean storeClass(Classes _class)
+    {
+        String sql = "INSERT INTO classes(teacher_id, name, deleted) VALUES(?, ?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, _class.getClassTeacherId());
+            ps.setString(2, _class.getClassName());
+            ps.setInt(3, _class.getClassDeleted());
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+//            throw new RuntimeException(e);
+            return false;
+        }
     }
 }

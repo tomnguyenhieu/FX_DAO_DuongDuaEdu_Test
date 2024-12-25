@@ -2,6 +2,7 @@ package com.edu.duongdua.fxdao.controller;
 
 import com.edu.duongdua.fxdao.Main;
 import com.edu.duongdua.fxdao.dao.ClassesDAO;
+import com.edu.duongdua.fxdao.model.Account;
 import com.edu.duongdua.fxdao.model.Classes;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,14 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ManageClassController implements Initializable
+public class ManageClassController extends Controller implements Initializable
 {
-    private ClassesDAO classesDao;
-
-    private List<Classes> classesList;
-//    private List<Accounts> teachersList;
-//    private List<Accounts> studentsList;
-
     @FXML
     private TilePane tilePane;
 
@@ -77,7 +72,7 @@ public class ManageClassController implements Initializable
 
         Label totalStudentsLabel = new Label();
         totalStudentsLabel.setText("Học sinh: " + totalStudents + " em");
-        totalStudentsLabel.setText("Học sinh: " + "TEST" + " em");
+//        totalStudentsLabel.setText("Học sinh: " + "TEST" + " em");
         totalStudentsLabel.setMinSize(190, 41);
         totalStudentsLabel.setFont(new Font(14));
 
@@ -117,45 +112,46 @@ public class ManageClassController implements Initializable
         tilePane.getChildren().add(vbox);
     }
     // Hiển thị lớp có trong database
-//    public void displayClass()
-//    {
-//        List<String> classData = getClassData(classesList, teachersList, studentsList);
-//        for (int i = 0; i < classData.size(); i++)
-//        {
-//            initClassBox(classData.getFirst(), classData.get(1), Integer.parseInt(classData.getLast()));
-//        }
-//    }
+    public void displayClass()
+    {
+        List<Classes> classData = getClassData();
+        for (Classes _class : classData)
+        {
+            initClassBox(_class.getClassName(), _class.getClassTeacherName(), _class.getClassTotalStudents());
+        }
+    }
 
     // Xử lý data
-    // Hàm trả về mảng chứa tên giáo viên & tổng học sinh theo lớp
-//    public List<String> getClassData(List<Classes> classesList, List<Accounts> teachersList, List<Accounts> studentsList)
-//    {
-//        List<String> data = new ArrayList<>();
-//        for (Classes _class : classesList)
-//        {
-//            // Lấy tên lớp & tên giáo viên
-//            for (Accounts teacher : teachersList)
-//            {
-//                if (_class.getClassTeacherId() == teacher.getAccountId())
-//                {
-//                    data.add(_class.getClassName());
-//                    data.add(teacher.getAccountName());
-//                }
-//            }
-//            // Lấy tổng số học sinh có trong lớp
-//            for (Accounts student : studentsList)
-//            {
-//                int count = 0;
-//                if (_class.getClassId() == student.getAccountId())
-//                {
-//                    count += 1;
-//                }
-//                String _count = Integer.toString(count);
-//                data.add(_count);
-//            }
-//        }
-//        return data;
-//    }
+    // Hàm trả về mảng object chứa tên giáo viên & tổng học sinh theo lớp
+    public List<Classes> getClassData()
+    {
+        List<Classes> data = new ArrayList<>();
+        for (Classes _class : classesList)
+        {
+            Classes classObj = new Classes();
+            // Lấy tên lớp & tên giáo viên
+            for (Account teacher : teachersList)
+            {
+                if (_class.getClassTeacherId() == teacher.getId())
+                {
+                    classObj.setClassName(_class.getClassName());
+                    classObj.setClassTeacherName(teacher.getName());
+                }
+            }
+            // Lấy tổng số học sinh có trong lớp
+            int count = 0;
+            for (Account student : studentsList)
+            {
+                if (_class.getClassId() == student.getClassId())
+                {
+                    count += 1;
+                }
+                classObj.setClassTotalStudents(count);
+            }
+            data.add(classObj);
+        }
+        return data;
+    }
 
     // Xử lý event
     // Thêm mới lớp
@@ -172,7 +168,7 @@ public class ManageClassController implements Initializable
             stage.show();
             stage.setOnCloseRequest((event) -> {
                 tilePane.getChildren().clear();
-//                displayClass();
+                displayClass();
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -181,9 +177,10 @@ public class ManageClassController implements Initializable
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        classesDao = new ClassesDAO();
         classesList = classesDao.getAllClasses();
+        teachersList = accountDAO.getAllTeacher();
+        studentsList = accountDAO.getAllStudent();
 
-//        displayClass();
+        displayClass();
     }
 }
