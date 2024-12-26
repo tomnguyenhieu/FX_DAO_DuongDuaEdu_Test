@@ -73,6 +73,31 @@ public class AccountDAO extends Account {
             throw new RuntimeException(e);
         }
     }
+    public void updateStudent(Account student){
+        String sql = "UPDATE accounts SET name = ?, age = ?, gender = ?, email = ?, password = ?, role = ?, phone = ?, address = ?, class_id = ?, parents_name = ?, parents_phone = ?, parents_email = ?, fee = ?, status = ? WHERE id = ?";
+        PreparedStatement ps;
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, student.getName());
+            ps.setInt(2, student.getAge());
+            ps.setString(3, student.getGender());
+            ps.setString(4, student.getEmail());
+            ps.setString(5, student.getPassword());
+            ps.setInt(6, 4);
+            ps.setString(7, student.getPhone());
+            ps.setString(8, student.getAddress());
+            ps.setInt(9, student.getClassId());
+            ps.setString(10, student.getPName());
+            ps.setString(11, student.getPPhone());
+            ps.setString(12, student.getPEmail());
+            ps.setInt(13, student.getFee());
+            ps.setInt(14, student.getStatus().equals("Đang hoạt động") ? 1 : 2);
+            ps.setInt(15, student.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Account findStudentById(int id){
         String sql = "SELECT * FROM accounts WHERE id = '"+id+"'";
         PreparedStatement ps;
