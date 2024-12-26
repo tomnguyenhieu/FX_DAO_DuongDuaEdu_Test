@@ -67,25 +67,25 @@ public class SideBarController extends Main implements Initializable
         switch (hboxId)
         {
             case "classBtn":
-                sceneName = "ManageClassScene";
+                sceneName = "Scene_ManageClass";
                 break;
             case "studentBtn":
-                sceneName = "ManageStudentScene";
+                sceneName = "Scene_ManageStudent";
                 break;
             case "teacherBtn":
-                sceneName = "ManageTeacherScene";
+                sceneName = "Scene_ManageTeacher";
                 break;
             case "employeeBtn":
-                sceneName = "ManageEmployeeScene";
+                sceneName = "Scene_ManageEmployee";
                 break;
             case "dbTeachersStaffsBtn":
-                sceneName = "DBTeachersStaffsScene";
+                sceneName = "Scene_DBTeachersStaffs";
                 break;
             case "dbChiBtn":
-                sceneName = "DBChiScene";
+                sceneName = "Scene_DBChi";
                 break;
             case "dbStudentsBtn":
-                sceneName = "DashboardStudentScene";
+                sceneName = "Scene_DashboardStudent";
                 break;
         }
         return sceneName;
@@ -99,7 +99,6 @@ public class SideBarController extends Main implements Initializable
         hbox.setStyle("-fx-background-color: #F05454; -fx-background-radius: 5px;");
         String hboxId = hbox.getId();
         String sceneName = getSceneName(hboxId);
-        System.out.println(sceneName);
 
         FXMLLoader fxmlLoader = null;
         try {
@@ -111,14 +110,14 @@ public class SideBarController extends Main implements Initializable
             throw new RuntimeException(e);
         }
 
-//        switch (sceneName)
-//        {
-//            case "ManageClassScene":
-//                ManageClassController manageClassController = fxmlLoader.getController();
+        switch (sceneName)
+        {
+            case "Scene_ManageClass":
+                ManageClassController manageClassController = fxmlLoader.getController();
 //                manageClassController.onMouseClickDisplayClasses();
-//                manageClassController.getContentPane(contentPane);
-//                break;
-//        }
+                manageClassController.setContentPane(contentPane);
+                break;
+        }
     }
     public void onMouseClickGetTitledPaneChildren(MouseEvent event)
     {
