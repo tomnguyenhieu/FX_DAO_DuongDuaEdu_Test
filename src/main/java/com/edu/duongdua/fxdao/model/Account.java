@@ -33,60 +33,6 @@ public class Account extends Model{
         this.name = name;
     }
 
-
-
-
-    //Student contructor
-    public Account(int id, String name, int age, String gender, String email, String password, String phone, String address, String pName, String pPhone, String pEmail, int fee, String className, String status) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-        this.pName = pName;
-        this.pPhone = pPhone;
-        this.pEmail = pEmail;
-        this.fee = fee;
-        this.className = className;
-        this.status = status;
-    }
-    public Account(int id, String email, String password, String name, int age, String gender, String phone, String address, int classId, String pName, String pEmail, String pPhone, int fee, String status) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.phone = phone;
-        this.address = address;
-        this.classId = classId;
-        this.pName = pName;
-        this.pEmail = pEmail;
-        this.pPhone = pPhone;
-        this.fee = fee;
-        this.status = status;
-    }
-
-    //Teacher contructor
-    public Account(int id, String name, int age, String gender, String email, String password, String phone, String address, String certificates, int salary, String status) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-        this.certificates = certificates;
-        this.salary = salary;
-        this.status = status;
-    }
-
     public int getId() {
         return id;
     }

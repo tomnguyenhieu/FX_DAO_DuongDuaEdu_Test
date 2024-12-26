@@ -2,34 +2,27 @@ package com.edu.duongdua.fxdao.model;
 
 public class Bill {
     private int id;
-    private String month;
-    private int lessonQty;
-    private int monthlySalary;
+    private int account_id;
     private String name;
-    private String bClass;
-    private String date;
+    private String created_at;
+    private String updated_at;
+    private String time;
+    private int lessonQty;
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    private int monthlySalary;
     private int price;
+    private int total_price;
     private String status;
-
-    //Teacher bill
-    public Bill(int id, String month, int lessonQty, int monthlySalary, String name, String status) {
-        this.id = id;
-        this.month = month;
-        this.lessonQty = lessonQty;
-        this.monthlySalary = monthlySalary;
-        this.name = name;
-        this.status = status;
-    }
-
-    //Student bill
-    public Bill(int id, String name, String bClass, String date, int price, String status) {
-        this.id = id;
-        this.name = name;
-        this.bClass = bClass;
-        this.date = date;
-        this.price = price;
-        this.status = status;
-    }
+    private int type;
 
     public int getId() {
         return id;
@@ -39,12 +32,44 @@ public class Bill {
         this.id = id;
     }
 
-    public String getMonth() {
-        return month;
+    public int getAccount_id() {
+        return account_id;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public void setAccount_id(int account_id) {
+        this.account_id = account_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public int getLessonQty() {
@@ -63,36 +88,20 @@ public class Bill {
         this.monthlySalary = monthlySalary;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getbClass() {
-        return bClass;
-    }
-
-    public void setbClass(String bClass) {
-        this.bClass = bClass;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public int getPrice() {
         return price;
     }
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(int total_price) {
+        this.total_price = total_price;
     }
 
     public String getStatus() {
@@ -102,4 +111,14 @@ public class Bill {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+
 }
