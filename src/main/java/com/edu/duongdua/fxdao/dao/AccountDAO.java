@@ -137,6 +137,115 @@ public class AccountDAO extends Account {
         }
     }
 
+    //Employee DAO
+    public List<Account> getAllEmployee(){
+        List<Account> teachers = new ArrayList<>();
+        String sql = "SELECT * FROM accounts WHERE role = 3";
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                Account teacher = new Account();
+                teacher.setId(rs.getInt("id"));
+                teacher.setName(rs.getString("name"));
+                teacher.setAge(rs.getInt("age"));
+                teacher.setGender(rs.getString("gender"));
+                teacher.setEmail(rs.getString("email"));
+                teacher.setPassword(rs.getString("password"));
+                teacher.setPhone(rs.getString("phone"));
+                teacher.setAddress(rs.getString("address"));
+                teacher.setCertificates(rs.getString("certificates"));
+                teacher.setSalary(rs.getInt("salary"));
+                teacher.setStatus(rs.getInt("status") == 1 ? "Đang hoạt động" : "Dừng hoạt động");
+                teachers.add(teacher);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return teachers;
+    }
+    public void addEmployee(Account employee){
+        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, status, certificates, salary)" +
+                " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, employee.getName());
+            ps.setInt(2, employee.getAge());
+            ps.setString(3, employee.getGender());
+            ps.setString(4, employee.getEmail());
+            ps.setString(5, employee.getPassword());
+            ps.setInt(6, 2);
+            ps.setString(7, employee.getPhone());
+            ps.setString(8, employee.getAddress());
+            ps.setInt(9, employee.getStatus().equals("Đang hoạt động") ? 1 : 2);
+            ps.setString(10, employee.getCertificates());
+            ps.setInt(11, employee.getSalary());
+            ps.execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void updateEmployee(Account employee){
+        String sql = "UPDATE accounts " +
+                "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, status = ?, certificates = ?, salary = ? WHERE id = ?";
+        PreparedStatement ps;
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, employee.getName());
+            ps.setInt(2, employee.getAge());
+            ps.setString(3, employee.getGender());
+            ps.setString(4, employee.getEmail());
+            ps.setString(5, employee.getPassword());
+            ps.setString(6, employee.getPhone());
+            ps.setString(7, employee.getAddress());
+            ps.setInt(8, employee.getStatus().equals("Đang hoạt động") ? 1 : 2);
+            ps.setString(9, employee.getCertificates());
+            ps.setInt(10, employee.getSalary());
+            ps.setInt(11, employee.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public Account findEmployeeById(int id){
+        String sql = "SELECT * FROM accounts WHERE id = '"+id+"'";
+        PreparedStatement ps;
+        Account employee = new Account();
+        try{
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                employee.setId(rs.getInt("id"));
+                employee.setName(rs.getString("name"));
+                employee.setAge(rs.getInt("age"));
+                employee.setGender(rs.getString("gender"));
+                employee.setEmail(rs.getString("email"));
+                employee.setPassword(rs.getString("password"));
+                employee.setPhone(rs.getString("phone"));
+                employee.setAddress(rs.getString("address"));
+                employee.setStatus(rs.getInt("status") == 1 ? "Đang hoạt động" : "Dừng hoạt động");
+                employee.setCertificates(rs.getString("certificates"));
+                employee.setSalary(rs.getInt("salary"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return employee;
+    }
+    public void deleteEmployee(int id){
+        String sql = "UPDATE accounts SET status = 2 WHERE id = '"+id+"'";
+        PreparedStatement ps;
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //Teacher DAO
     public List<Account> getAllTeacher(){
         List<Account> teachers = new ArrayList<>();
@@ -167,7 +276,82 @@ public class AccountDAO extends Account {
         return teachers;
     }
     public void addTeacher(Account teacher){
-
+        String sql = "INSERT INTO accounts (name, age, gender, email, password, role, phone, address, status, certificates, salary)" +
+                " VALUE (?,?,?,?,?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, teacher.getName());
+            ps.setInt(2, teacher.getAge());
+            ps.setString(3, teacher.getGender());
+            ps.setString(4, teacher.getEmail());
+            ps.setString(5, teacher.getPassword());
+            ps.setInt(6, 2);
+            ps.setString(7, teacher.getPhone());
+            ps.setString(8, teacher.getAddress());
+            ps.setInt(9, teacher.getStatus().equals("Đang hoạt động") ? 1 : 2);
+            ps.setString(10, teacher.getCertificates());
+            ps.setInt(11, teacher.getSalary());
+            ps.execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
+    public void updateTeacher(Account teacher){
+        String sql = "UPDATE accounts " +
+                     "SET NAME = ?, age = ?, gender = ?, email = ?, PASSWORD = ?, phone = ?, address = ?, status = ?, certificates = ?, salary = ? WHERE id = ?";
+        PreparedStatement ps;
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, teacher.getName());
+            ps.setInt(2, teacher.getAge());
+            ps.setString(3, teacher.getGender());
+            ps.setString(4, teacher.getEmail());
+            ps.setString(5, teacher.getPassword());
+            ps.setString(6, teacher.getPhone());
+            ps.setString(7, teacher.getAddress());
+            ps.setInt(8, teacher.getStatus().equals("Đang hoạt động") ? 1 : 2);
+            ps.setString(9, teacher.getCertificates());
+            ps.setInt(10, teacher.getSalary());
+            ps.setInt(11, teacher.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public Account findTeacherById(int id){
+        String sql = "SELECT * FROM accounts WHERE id = '"+id+"'";
+        PreparedStatement ps;
+        Account teacher = new Account();
+        try{
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                teacher.setId(rs.getInt("id"));
+                teacher.setName(rs.getString("name"));
+                teacher.setAge(rs.getInt("age"));
+                teacher.setGender(rs.getString("gender"));
+                teacher.setEmail(rs.getString("email"));
+                teacher.setPassword(rs.getString("password"));
+                teacher.setPhone(rs.getString("phone"));
+                teacher.setAddress(rs.getString("address"));
+                teacher.setStatus(rs.getInt("status") == 1 ? "Đang hoạt động" : "Dừng hoạt động");
+                teacher.setCertificates(rs.getString("certificates"));
+                teacher.setSalary(rs.getInt("salary"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return teacher;
+    }
+    public void deleteTeacher(int id){
+        String sql = "UPDATE accounts SET status = 2 WHERE id = '"+id+"'";
+        PreparedStatement ps;
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
