@@ -12,7 +12,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
@@ -33,10 +37,21 @@ public class ManageClassController extends Controller implements Initializable
 {
     @FXML
     private TilePane tilePane;
+    @FXML
+    private ComboBox<String> classStatusCb;
+    private AnchorPane contentPane;
+
+    public AnchorPane getContentPane() {
+        return contentPane;
+    }
+
+    public void setContentPane(AnchorPane contentPane) {
+        this.contentPane = contentPane;
+    }
 
     // Xử lý logic
     // Khởi tạo class box
-    public void initClassBox(String className, String teacherName, int totalStudents)
+    public void initClassBox(String className, String teacherName, int totalStudents, int classStatus)
     {
         VBox vbox = new VBox();
         vbox.setMinSize(240, 150);
@@ -50,7 +65,7 @@ public class ManageClassController extends Controller implements Initializable
         label.setTextFill(Color.WHITE);
         label.setAlignment(Pos.CENTER);
         label.setCursor(Cursor.HAND);
-//        label.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickLoadListLessons);
+        label.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickLoadListLessons);
         label.setStyle("-fx-font-weight: bold; -fx-background-color:  #F05454; -fx-background-radius: 8 8 0 0");
 
         HBox hbox = new HBox();
@@ -60,19 +75,21 @@ public class ManageClassController extends Controller implements Initializable
         VBox vboxText = new VBox();
         vboxText.setMinSize(190, 82);
         vboxText.setPrefSize(190, 82);
+        if (classStatus == 2) {
+            vboxText.setMinSize(218, 82);
+            vboxText.setPrefSize(218, 82);
+        }
         vboxText.setPadding(new Insets(0, 0, 0, 12));
         vboxText.setStyle("-fx-background-color:  #ffffff; -fx-background-radius: 6");
         HBox.setMargin(vboxText, new Insets(10, 0, 10, 10));
 
         Label teacherNameLabel = new Label();
         teacherNameLabel.setText("Giáo viên: " + teacherName);
-//        teacherNameLabel.setText("Giáo viên: " + "TEST");
         teacherNameLabel.setMinSize(190, 41);
         teacherNameLabel.setFont(new Font(14));
 
         Label totalStudentsLabel = new Label();
         totalStudentsLabel.setText("Học sinh: " + totalStudents + " em");
-//        totalStudentsLabel.setText("Học sinh: " + "TEST" + " em");
         totalStudentsLabel.setMinSize(190, 41);
         totalStudentsLabel.setFont(new Font(14));
 
@@ -80,77 +97,49 @@ public class ManageClassController extends Controller implements Initializable
 
         VBox vboxIcon = new VBox();
         AnchorPane editIconContainer = new AnchorPane();
-//        editIconContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickEditClass);
-        editIconContainer.setMinSize(40, 52);
-        editIconContainer.setCursor(Cursor.HAND);
-        FontIcon editIcon = new FontIcon();
-        editIcon.setIconLiteral("fas-pen");
-        editIcon.setLayoutX(10);
-        editIcon.setLayoutY(35);
-        editIcon.setIconColor(Color.WHITE);
-        editIcon.setIconSize(20);
-        editIconContainer.getChildren().add(editIcon);
+        if (classStatus == 1) {
+            editIconContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickEditClass);
+            editIconContainer.setMinSize(40, 52);
+            editIconContainer.setCursor(Cursor.HAND);
+
+            FontIcon editIcon = new FontIcon();
+            editIcon.setIconLiteral("fas-pen");
+            editIcon.setLayoutX(10);
+            editIcon.setLayoutY(35);
+            editIcon.setIconColor(Color.WHITE);
+            editIcon.setIconSize(20);
+            editIconContainer.getChildren().add(editIcon);
+        }
 
         AnchorPane trashIconContainer = new AnchorPane();
-//        trashIconContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickRemoveClass);
-        trashIconContainer.setMinSize(40, 52);
-        trashIconContainer.setCursor(Cursor.HAND);
-        FontIcon trashIcon = new FontIcon();
-        trashIcon.setIconLiteral("fas-trash-alt");
-        trashIcon.setLayoutX(10);
-        trashIcon.setLayoutY(30);
-        trashIcon.setIconColor(Color.WHITE);
-        trashIcon.setIconSize(20);
-        trashIconContainer.getChildren().add(trashIcon);
+        if (classStatus == 1) {
+            trashIconContainer.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickRemoveClass);
+            trashIconContainer.setMinSize(40, 52);
+            trashIconContainer.setCursor(Cursor.HAND);
+
+            FontIcon trashIcon = new FontIcon();
+            trashIcon.setIconLiteral("fas-trash-alt");
+            trashIcon.setLayoutX(10);
+            trashIcon.setLayoutY(30);
+            trashIcon.setIconColor(Color.WHITE);
+            trashIcon.setIconSize(20);
+            trashIconContainer.getChildren().add(trashIcon);
+        }
 
         vboxIcon.getChildren().addAll(editIconContainer, trashIconContainer);
-
         hbox.getChildren().addAll(vboxText, vboxIcon);
-
         vbox.getChildren().addAll(label, hbox);
-
         tilePane.getChildren().add(vbox);
     }
-    // Hiển thị lớp có trong database
-    public void displayClass()
-    {
-        List<Classes> classData = getClassData();
-        for (Classes _class : classData)
-        {
-            initClassBox(_class.getClassName(), _class.getClassTeacherName(), _class.getClassTotalStudents());
-        }
-    }
 
-    // Xử lý data
-    // Hàm trả về mảng object chứa tên giáo viên & tổng học sinh theo lớp
-    public List<Classes> getClassData()
+    // Hiển thị lớp có trong database
+    public void displayClass(int classStatus)
     {
-        List<Classes> data = new ArrayList<>();
-        for (Classes _class : classesList)
+        List<Classes> classesInfo = classesDao.getClassesInfo(classStatus);
+        for (Classes _class : classesInfo)
         {
-            Classes classObj = new Classes();
-            // Lấy tên lớp & tên giáo viên
-            for (Account teacher : teachersList)
-            {
-                if (_class.getClassTeacherId() == teacher.getId())
-                {
-                    classObj.setClassName(_class.getClassName());
-                    classObj.setClassTeacherName(teacher.getName());
-                }
-            }
-            // Lấy tổng số học sinh có trong lớp
-            int count = 0;
-            for (Account student : studentsList)
-            {
-                if (_class.getClassId() == student.getClassId())
-                {
-                    count += 1;
-                }
-                classObj.setClassTotalStudents(count);
-            }
-            data.add(classObj);
+            initClassBox(_class.getClassName(), _class.getClassTeacherName(), _class.getClassTotalStudents(), classStatus);
         }
-        return data;
     }
 
     // Xử lý event
@@ -158,8 +147,10 @@ public class ManageClassController extends Controller implements Initializable
     public void onActionAddClass()
     {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/AddClassModal.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddClass.fxml"));
             Parent root = loader.load();
+            AddClassController addClassController = loader.getController();
+            addClassController.setEdit(false);
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -168,8 +159,118 @@ public class ManageClassController extends Controller implements Initializable
             stage.show();
             stage.setOnCloseRequest((event) -> {
                 tilePane.getChildren().clear();
-                displayClass();
+                displayClass(1);
             });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Sửa thông tin của lớp
+    public void onMouseClickEditClass(MouseEvent event)
+    {
+        AnchorPane iconContainer = (AnchorPane) event.getSource();
+        VBox vboxIcons = (VBox) iconContainer.getParent();
+        HBox hbox = (HBox) vboxIcons.getParent();
+        VBox vboxParent = (VBox) hbox.getParent();
+        Label classLabel = (Label) vboxParent.getChildren().getFirst();
+
+        VBox vboxText = (VBox) hbox.getChildren().getFirst();
+        Label teacherLabel = (Label) vboxText.getChildren().getFirst();
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddClass.fxml"));
+            Parent root = loader.load();
+            AddClassController addClassController = loader.getController();
+
+            addClassController.setEdit(true);
+            addClassController.initEditClassForm(classLabel.getText(), teacherLabel.getText());
+            addClassController.setTmpClassName(classLabel.getText());
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+            stage.setOnCloseRequest((_event) -> {
+                tilePane.getChildren().clear();
+                displayClass(1);
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Xóa lớp
+    public void onMouseClickRemoveClass(MouseEvent event)
+    {
+        AnchorPane iconContainer = (AnchorPane) event.getSource();
+        VBox vboxIcons = (VBox) iconContainer.getParent();
+        HBox hbox = (HBox) vboxIcons.getParent();
+        VBox vboxParent = (VBox) hbox.getParent();
+        Label classLabel = (Label) vboxParent.getChildren().getFirst();
+        String className = classLabel.getText();
+
+        for (Classes _class : classesDao.getAllClasses())
+        {
+            if (_class.getClassName().equals(className))
+            {
+                classesDao.deleteClass(_class);
+            }
+        }
+        tilePane.getChildren().clear();
+        displayClass(1);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("Xóa thành công!");
+        alert.show();
+    }
+
+    // Export mẫu excel nhật kí theo lớp
+    public void onActionExportExcel()
+    {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_ExportFormExcel.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+            stage.setOnCloseRequest((event) -> { });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Hàm chọn lớp muốn hiển thị (lớp đang hoạt động/đã bị xóa)
+    public void onSelectStatusCb()
+    {
+        String _classStatus = classStatusCb.getValue();
+        int classStatus = 1;
+        if (_classStatus.equals("Dừng hoạt động")) {
+            classStatus = 2;
+        }
+
+        tilePane.getChildren().clear();
+        displayClass(classStatus);
+    }
+
+    // Hàm hiển thị danh sách các lessons theo lớp
+    public void onMouseClickLoadListLessons(MouseEvent event)
+    {
+        Label classLabel = (Label) event.getSource();
+        String className = classLabel.getText();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/Scene_ManageDiary.fxml"));
+            Parent root = fxmlLoader.load();
+
+//            ManageDiaryController manageDiaryController = fxmlLoader.getController();
+//            manageDiaryController.loadLessons(classId);
+
+            contentPane.getChildren().removeAll();
+            contentPane.getChildren().setAll(root);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -177,10 +278,7 @@ public class ManageClassController extends Controller implements Initializable
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        classesList = classesDao.getAllClasses();
-        teachersList = accountDAO.getAllTeacher();
-        studentsList = accountDAO.getAllStudent();
-
-        displayClass();
+        classStatusCb.getItems().add("Đang hoạt động");
+        classStatusCb.getItems().add("Dừng hoạt động");
     }
 }
