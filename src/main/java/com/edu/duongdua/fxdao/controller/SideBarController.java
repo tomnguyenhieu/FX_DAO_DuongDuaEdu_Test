@@ -110,13 +110,10 @@ public class SideBarController extends Main implements Initializable
             throw new RuntimeException(e);
         }
 
-        switch (sceneName)
+        if (sceneName.equals("Scene_ManageClass"))
         {
-            case "Scene_ManageClass":
-                ManageClassController manageClassController = fxmlLoader.getController();
-//                manageClassController.onMouseClickDisplayClasses();
-                manageClassController.setContentPane(contentPane);
-                break;
+            ManageClassController manageClassController = fxmlLoader.getController();
+            manageClassController.setContentPane(contentPane);
         }
     }
     public void onMouseClickGetTitledPaneChildren(MouseEvent event)

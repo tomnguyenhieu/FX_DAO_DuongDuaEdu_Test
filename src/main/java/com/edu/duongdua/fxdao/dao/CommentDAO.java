@@ -39,31 +39,8 @@ public class CommentDAO extends Comment
         return commentsList;
     }
 
-    // Tìm comment bằng id
-    public Comment findByID(int commentId)
-    {
-        Comment comment = new Comment();
-        String sql = "SELECT * FROM comments WHERE id = " +commentId;
-        PreparedStatement ps;
-        try {
-            ps = this.conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next())
-            {
-                comment.setId(rs.getInt("id"));
-                comment.setStudentId(rs.getInt("student_id"));
-                comment.setLessonId(rs.getInt("lesson_id"));
-                comment.setComment(rs.getString("comment"));
-                comment.setScore(rs.getInt("score"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return comment;
-    }
-
     // Thêm mới comment vào trong database
-    public boolean storeClass(Comment comment)
+    public boolean storeComment(Comment comment)
     {
         String sql = "INSERT INTO comments("
                 + "student_id, lesson_id, comment, score)"
@@ -71,16 +48,42 @@ public class CommentDAO extends Comment
         PreparedStatement ps;
         try {
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, comment.getId());
-            ps.setInt(2, comment.getStudentId());
-            ps.setInt(3, comment.getLessonId());
-            ps.setString(4, comment.getComment());
-            ps.setInt(5, comment.getScore());
+            ps.setInt(1, comment.getStudentId());
+            ps.setInt(2, comment.getLessonId());
+            ps.setString(3, comment.getComment());
+            ps.setInt(4, comment.getScore());
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
 //            throw new RuntimeException(e);
             return false;
         }
+    }
+
+    // Lấy toàn bộ comments theo lessons (lessonId, studentName, comment, score)
+    public List<Comment> getLessonComments(int lessonId)
+    {
+        List<Comment> commentsList = new ArrayList<>();
+        String sql = "SELECT lessons.id AS lesson_id, accounts.name AS student_name, comments.comment, comments.score "
+            +"FROM lessons JOIN comments ON lessons.id = comments.lesson_id "
+            + "JOIN accounts ON accounts.id = comments.student_id "
+            + "WHERE lessons.id = " + lessonId;
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                Comment comment = new Comment();
+                comment.setId(rs.getInt("lesson_id"));
+                comment.setStudentName(rs.getString("student_name"));
+                comment.setComment(rs.getString("comment"));
+                comment.setScore(rs.getInt("score"));
+                commentsList.add(comment);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return commentsList;
     }
 }

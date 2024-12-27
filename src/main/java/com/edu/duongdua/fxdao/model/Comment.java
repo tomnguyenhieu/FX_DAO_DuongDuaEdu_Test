@@ -4,6 +4,7 @@ public class Comment extends Model
 {
     private int id;
     private int studentId;
+    private String studentName;
     private int lessonId;
     private String comment;
     private int score;
@@ -22,6 +23,14 @@ public class Comment extends Model
 
     public void setStudentId(int studentId) {
         this.studentId = studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public int getLessonId() {

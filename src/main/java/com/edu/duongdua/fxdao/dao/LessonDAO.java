@@ -39,11 +39,32 @@ public class LessonDAO extends Lesson
         return lessonList;
     }
 
-    // Tìm thông tin lesson bằng id của lớp
+    // Tìm lesson bằng id của lesson đó
     public Lesson findByID(int lessonId)
     {
         Lesson lesson = new Lesson();
         String sql = "SELECT * FROM lessons WHERE id = " +lessonId;
+        PreparedStatement ps;
+        try {
+            ps = this.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                lesson.setId(rs.getInt("id"));
+                lesson.setClassId(rs.getInt("class_id"));
+                lesson.setTitle(rs.getString("title"));
+                lesson.setContent(rs.getString("content"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lesson;
+    }
+
+    public Lesson findByTitle(String title)
+    {
+        Lesson lesson = new Lesson();
+        String sql = "SELECT * FROM lessons WHERE title = '"+title+"'";
         PreparedStatement ps;
         try {
             ps = this.conn.prepareStatement(sql);
@@ -70,10 +91,9 @@ public class LessonDAO extends Lesson
         PreparedStatement ps;
         try {
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, lesson.getId());
-            ps.setInt(2, lesson.getClassId());
-            ps.setString(3, lesson.getTitle());
-            ps.setString(4, lesson.getContent());
+            ps.setInt(1, lesson.getClassId());
+            ps.setString(2, lesson.getTitle());
+            ps.setString(3, lesson.getContent());
             ps.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -82,21 +102,7 @@ public class LessonDAO extends Lesson
         }
     }
 
-    // Xóa lớp trong database
-    public boolean deleteLesson(Lesson lesson)
-    {
-        String sql = "DELETE FROM lessons WHERE id = " +lesson.getId();
-        PreparedStatement ps;
-        try {
-            ps = this.conn.prepareStatement(sql);
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // Lấy thông tin của lớp bằng lesson id
+    // Lấy thông tin của lesson (id, teacherName, className, title, content) bằng lesson id
     public Lesson getLessonInfoById(int lessonId)
     {
         Lesson lesson = new Lesson();
