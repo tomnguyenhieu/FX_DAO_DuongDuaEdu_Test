@@ -177,7 +177,7 @@ public class AccountDAO extends Account {
             ps.setString(3, employee.getGender());
             ps.setString(4, employee.getEmail());
             ps.setString(5, employee.getPassword());
-            ps.setInt(6, 2);
+            ps.setInt(6, 3);
             ps.setString(7, employee.getPhone());
             ps.setString(8, employee.getAddress());
             ps.setInt(9, employee.getStatus().equals("Đang hoạt động") ? 1 : 2);

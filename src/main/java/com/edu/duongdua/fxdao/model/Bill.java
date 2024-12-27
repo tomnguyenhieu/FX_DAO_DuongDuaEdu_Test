@@ -9,6 +9,13 @@ public class Bill {
     private String time;
     private int lessonQty;
     private int quantity;
+    private int monthlySalary;
+    private int price;
+    private int total_price;
+    private String status;
+    private int type;
+
+
 
     public int getQuantity() {
         return quantity;
@@ -17,13 +24,6 @@ public class Bill {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    private int monthlySalary;
-    private int price;
-    private int total_price;
-    private String status;
-    private int type;
-
     public int getId() {
         return id;
     }

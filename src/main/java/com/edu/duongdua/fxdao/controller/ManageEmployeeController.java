@@ -1,8 +1,11 @@
 package com.edu.duongdua.fxdao.controller;
 
+import java.net.URL;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import com.edu.duongdua.fxdao.Main;
-import com.edu.duongdua.fxdao.dao.AccountDAO;
 import com.edu.duongdua.fxdao.model.Account;
 import com.edu.duongdua.fxdao.model.Bill;
 import com.edu.duongdua.fxdao.model.Classes;
@@ -29,17 +32,11 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-
-import java.net.URL;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.ResourceBundle;
-
-public class ManageStudentController extends Controller implements Initializable{
-    Account student = null;
+public class ManageEmployeeController extends Controller implements Initializable {
+    Account employee = null;
     double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     @FXML
-    private TableView<Account> studentsTable;
+    private TableView<Account> employeeTable;
     @FXML
     private TableColumn<Account, String> idCol;
     @FXML
@@ -57,22 +54,15 @@ public class ManageStudentController extends Controller implements Initializable
     @FXML
     private TableColumn<Account, String> addressCol;
     @FXML
-    private TableColumn<Account, String> pNameCol;
+    private TableColumn<Account, String> certificateCol;
     @FXML
-    private TableColumn<Account, String> pPhoneCol;
-    @FXML
-    private TableColumn<Account, String> pEmailCol;
-    @FXML
-    private TableColumn<Account, String> feeCol;
-    @FXML
-    private TableColumn<Account, String> classNameCol;
+    private TableColumn<Account, String> salaryCol;
     @FXML
     private TableColumn<Account, String> statusCol;
-
+    @FXML
+    private StackPane billStkPane;
     @FXML
     private TableView<Bill> billTable;
-    @FXML
-    private TableColumn<Bill, String> bNameCol;
     @FXML
     private TableColumn<Bill, String> bDateCol;
     @FXML
@@ -81,26 +71,24 @@ public class ManageStudentController extends Controller implements Initializable
     private TableColumn<Bill, String> bStatusCol;
     @FXML
     private TableColumn<Bill, String> bUpdateCol;
-    @FXML
-    private StackPane billStkPane;
+
 
     public void refreshBillTable(){
         final ObservableList<Bill> BillList = FXCollections.observableArrayList();
         List<Bill> billList = billDAO.getAllBill();
-        int studentId = studentsTable.getSelectionModel().getSelectedItem().getId();
+        int employeeId = employeeTable.getSelectionModel().getSelectedItem().getId();
         for(Bill bill : billList){
-            if(studentId == bill.getAccount_id()){
-                bill.setPrice(accountDAO.findStudentById(studentId).getFee());
+            if(employeeId == bill.getAccount_id()){
+                bill.setTotal_price(accountDAO.findEmployeeById(employeeId).getSalary());
                 BillList.add(bill);
             }
         }
-        bNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+
         bDateCol.setCellValueFactory(new PropertyValueFactory<>("time"));
-        bPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        bPriceCol.setCellValueFactory(new PropertyValueFactory<>("total_price"));
         bStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         billTable.setItems(BillList);
 
-        // Tạo button cập nhật
         Callback<TableColumn<Bill, String>, TableCell<Bill, String>> cellFoctory = (TableColumn<Bill, String> param) -> {
             final TableCell<Bill, String> cell = new TableCell<>() {
                 @Override
@@ -145,25 +133,22 @@ public class ManageStudentController extends Controller implements Initializable
                             setGraphic(hb);
                             setText(null);
                         }
+
+
                     }
                 }
             };
             return cell;
         };
         bUpdateCol.setCellFactory(cellFoctory);
-
     }
-    public void refreshStudentTable() {
-        final ObservableList<Account> StudentList = FXCollections.observableArrayList();
-        List<Account> studentsList = accountDAO.getAllStudent();
-        for (Account student : studentsList){
-            for (Classes accClass : classesList){
-                if (student.getClassId() == accClass.getClassId()){
-                    student.setClassName(accClass.getClassName());
-                }
-            }
-        }
-        StudentList.addAll(studentsList);
+    @FXML
+    public void refreshTableEmployee() {
+        final ObservableList<Account> EmployeeList = FXCollections.observableArrayList();
+
+        List<Account> employeeList = accountDAO.getAllEmployee();
+        EmployeeList.addAll(employeeList);
+
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
@@ -172,23 +157,21 @@ public class ManageStudentController extends Controller implements Initializable
         passCol.setCellValueFactory(new PropertyValueFactory<>("password"));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        pNameCol.setCellValueFactory(new PropertyValueFactory<>("pName"));
-        pPhoneCol.setCellValueFactory(new PropertyValueFactory<>("pPhone"));
-        pEmailCol.setCellValueFactory(new PropertyValueFactory<>("pEmail"));
-        feeCol.setCellValueFactory(new PropertyValueFactory<>("fee"));
-        classNameCol.setCellValueFactory(new PropertyValueFactory<>("className"));
+        certificateCol.setCellValueFactory(new PropertyValueFactory<>("certificates"));
+        salaryCol.setCellValueFactory(new PropertyValueFactory<>("salary"));
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        studentsTable.setItems(StudentList);
-    }
 
+        employeeTable.setItems(EmployeeList);
+    }
+    // Add new Employee
     @FXML
-    private void onAddStudentClick(){
-        // bat stage form them student
+    public void onAddEmployeeClick() {
+        billStkPane.setVisible(false);
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddStudent.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddEmployee.fxml"));
             Parent root = loader.load();
-            AddStudentController addStudentController = loader.getController();
-            addStudentController.setEdit(false);
+            AddEmployeeController addEmployeeController = loader.getController();
+            addEmployeeController.setEdit(false);
 
             Stage stage = new Stage();
             Scene scene = new Scene(root);
@@ -197,27 +180,27 @@ public class ManageStudentController extends Controller implements Initializable
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.centerOnScreen();
             stage.show();
-            stage.setOnCloseRequest((event1) -> {
-                refreshStudentTable();
+            stage.setOnCloseRequest((event) -> {
+                refreshTableEmployee();
             });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    public void onEditStudentClick() {
+
+    public void onEditEmployeeClick() {
+        // Lay thong tin nhan vien de hien len form
+        employee = employeeTable.getSelectionModel().getSelectedItem();
         billStkPane.setVisible(false);
-        // Lay thong tin student de hien len form
-        student = studentsTable.getSelectionModel().getSelectedItem();
-        TableView.TableViewSelectionModel<Account> studentSelection = studentsTable.getSelectionModel();
-        if(student != null) {
-            System.out.println(student.getName());
+        if(employee != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddStudent.fxml"));
+                FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_AddEmployee.fxml"));
                 Parent root = loader.load();
-                AddStudentController addStudentController = loader.getController();
-                addStudentController.setTextField(student.getName(), student.getAge(), student.getGender(), student.getEmail(), student.getPassword(), student.getPhone(), student.getAddress(), student.getClassName(), student.getPName(), student.getPPhone(), student.getPEmail(), student.getFee(), student.getStatus());
-                addStudentController.setEdit(true);
-                addStudentController.setStudentId(student.getId());
+                AddEmployeeController addEmployeeController = loader.getController();
+                addEmployeeController.setTextField(employee.getName(), employee.getAge(), employee.getGender(), employee.getEmail(), employee.getPassword(), employee.getPhone(), employee.getAddress(),employee.getStatus(), employee.getCertificates(), employee.getSalary());
+                addEmployeeController.setEdit(true);
+                addEmployeeController.setEmployeeId(employee.getId());
+
 
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
@@ -226,7 +209,7 @@ public class ManageStudentController extends Controller implements Initializable
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
                 stage.setOnCloseRequest((event) -> {
-                    refreshStudentTable();
+                    refreshTableEmployee();
                 });
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -235,32 +218,36 @@ public class ManageStudentController extends Controller implements Initializable
             // chua chon student
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
-            alert.setContentText("Chọn một học sinh để sửa");
+            alert.setContentText("Chọn một nhân viên để sửa");
             alert.showAndWait();
         }
     }
-    public void onDeleteStudentClick(){
+
+    public void onDeleteEmployeeClick(MouseEvent event){
         // Lay id student va bo vao ham xoa
-        student = studentsTable.getSelectionModel().getSelectedItem();
-        if(student != null){
-            int studentId = student.getId();
-            accountDAO.deleteStudent(studentId);
-            refreshStudentTable();
+        employee = employeeTable.getSelectionModel().getSelectedItem();
+        billStkPane.setVisible(false);
+        if(employee != null){
+            int employeeId = employee.getId();
+            accountDAO.deleteEmployee(employeeId);
+            refreshTableEmployee();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            alert.setContentText("Xóa sinh viên thành công");
+            alert.setContentText("Xóa nhân viên thành công");
             alert.showAndWait();
         } else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText(null);
-            alert.setContentText("Chọn vào học sinh để xóa!");
+            alert.setContentText("Chọn vào nhân viên để xóa!");
             alert.showAndWait();
         }
     }
+
     boolean firstClick = true;
-    public void onStudentTableClick(MouseEvent event){
-        student = studentsTable.getSelectionModel().getSelectedItem();
-        if(student != null){
+    public void onEmployeeTableClick(MouseEvent event){
+        employee = employeeTable.getSelectionModel().getSelectedItem();
+        if(employee != null){
+            System.out.println(employee.getId());
             double posX = event.getX();
             double posY = event.getY();
             ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(.15), billStkPane);
@@ -299,42 +286,38 @@ public class ManageStudentController extends Controller implements Initializable
         }
     }
 
-    // Tạo hiệu ứng
-    public void onMouseEnter(MouseEvent event){
-        HBox hbox = (HBox) event.getSource();
-        hbox.setEffect(new ColorAdjust(0,0,0,-0.2));
-    }
-    public void onMouseExit(MouseEvent event){
-        HBox hbox = (HBox) event.getSource();
-        hbox.setEffect(new ColorAdjust(0,0,0,0));
-    }
+
+    @FXML
     public void onBtnAddPressed(MouseEvent event) {
         orgSceneX = event.getSceneX();
         orgSceneY = event.getSceneY();
-        StackPane stkPane = (StackPane)(event.getSource());
+        StackPane stkPane = (StackPane) event.getSource();
         stkPane.setScaleY(1.1);
         stkPane.setScaleX(1.1);
-        orgTranslateX = ((StackPane)(event.getSource())).getTranslateX();
-        orgTranslateY = ((StackPane)(event.getSource())).getTranslateY();
+        orgTranslateX = stkPane.getTranslateX();
+        orgTranslateY = stkPane.getTranslateY();
     }
+
+    @FXML
     public void onBtnAddDragged(MouseEvent event) {
         double offsetX = event.getSceneX() - orgSceneX;
         double offsetY = event.getSceneY() - orgSceneY;
         double newTranslateX = orgTranslateX + offsetX;
         double newTranslateY = orgTranslateY + offsetY;
-        ((StackPane)(event.getSource())).setTranslateX(newTranslateX);
-        ((StackPane)(event.getSource())).setTranslateY(newTranslateY);
+        ((StackPane) event.getSource()).setTranslateX(newTranslateX);
+        ((StackPane) event.getSource()).setTranslateY(newTranslateY);
     }
-    public void onBtnExit(MouseEvent event){
-        StackPane stkPane = (StackPane)(event.getSource());
+
+    @FXML
+    public void onBtnExit(MouseEvent event) {
+        StackPane stkPane = (StackPane) event.getSource();
         stkPane.setScaleY(1);
         stkPane.setScaleX(1);
     }
-
-    //Hàm khởi tạo
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        refreshStudentTable();
+        refreshTableEmployee();
         billStkPane.setVisible(false);
     }
 }
+
