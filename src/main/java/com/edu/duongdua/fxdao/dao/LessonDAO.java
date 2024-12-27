@@ -95,4 +95,29 @@ public class LessonDAO extends Lesson
             throw new RuntimeException(e);
         }
     }
+
+    // Lấy thông tin của lớp bằng lesson id
+    public Lesson getLessonInfoById(int lessonId)
+    {
+        Lesson lesson = new Lesson();
+        String sql = "SELECT classes.id, accounts.name AS teacher_name, classes.name AS class_name, lessons.title, "
+                + "lessons.content FROM classes JOIN accounts ON classes.teacher_id = accounts.id "
+                + "JOIN lessons ON classes.id = lessons.class_id WHERE lessons.id = " +lessonId;
+        PreparedStatement ps;
+        try {
+            ps = this.conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                lesson.setId(rs.getInt("id"));
+                lesson.setTeacherName(rs.getString("teacher_name"));
+                lesson.setClassName(rs.getString("class_name"));
+                lesson.setTitle(rs.getString("title"));
+                lesson.setContent(rs.getString("content"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return lesson;
+    }
 }

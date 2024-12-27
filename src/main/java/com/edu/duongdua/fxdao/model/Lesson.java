@@ -1,11 +1,15 @@
 package com.edu.duongdua.fxdao.model;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Lesson extends Model
 {
     private int id;
     private int classId;
     private String title;
     private String content;
+    private String className;
+    private String teacherName;
 
     public int getId() {
         return id;
@@ -23,12 +27,20 @@ public class Lesson extends Model
         this.classId = classId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getContent() {
@@ -37,5 +49,13 @@ public class Lesson extends Model
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
