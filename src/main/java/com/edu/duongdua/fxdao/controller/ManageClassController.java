@@ -4,6 +4,7 @@ import com.edu.duongdua.fxdao.Main;
 import com.edu.duongdua.fxdao.dao.ClassesDAO;
 import com.edu.duongdua.fxdao.model.Account;
 import com.edu.duongdua.fxdao.model.Classes;
+import com.edu.duongdua.fxdao.model.Lesson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -64,8 +65,11 @@ public class ManageClassController extends Controller implements Initializable
         label.setFont(new Font("Roboto", 24));
         label.setTextFill(Color.WHITE);
         label.setAlignment(Pos.CENTER);
-        label.setCursor(Cursor.HAND);
-        label.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickLoadListLessons);
+        if (classStatus == 1)
+        {
+            label.setCursor(Cursor.HAND);
+            label.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickLoadListLessons);
+        }
         label.setStyle("-fx-font-weight: bold; -fx-background-color:  #F05454; -fx-background-radius: 8 8 0 0");
 
         HBox hbox = new HBox();
@@ -261,14 +265,21 @@ public class ManageClassController extends Controller implements Initializable
     {
         Label classLabel = (Label) event.getSource();
         String className = classLabel.getText();
-
+        Classes classObj = new Classes();
+        for (Classes _class : classesDao.getAllClasses())
+        {
+            if (_class.getClassName().equals(className))
+            {
+                classObj = _class;
+            }
+        }
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("view/Scene_ManageDiary.fxml"));
             Parent root = fxmlLoader.load();
-
-//            ManageDiaryController manageDiaryController = fxmlLoader.getController();
-//            manageDiaryController.loadLessons(classId);
-
+            ManageDiaryController manageDiaryController = fxmlLoader.getController();
+            manageDiaryController.displayLessons(classObj);
+            manageDiaryController.setClassObj(classObj);
+            manageDiaryController.setClassName(className);
             contentPane.getChildren().removeAll();
             contentPane.getChildren().setAll(root);
         } catch (Exception e) {
