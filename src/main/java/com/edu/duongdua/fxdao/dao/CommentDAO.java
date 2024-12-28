@@ -64,7 +64,7 @@ public class CommentDAO extends Comment
     public List<Comment> getLessonComments(int lessonId)
     {
         List<Comment> commentsList = new ArrayList<>();
-        String sql = "SELECT lessons.id AS lesson_id, accounts.name AS student_name, comments.comment, comments.score "
+        String sql = "SELECT lessons.id AS lesson_id, accounts.id AS student_id, accounts.name AS student_name, comments.comment, comments.score "
             +"FROM lessons JOIN comments ON lessons.id = comments.lesson_id "
             + "JOIN accounts ON accounts.id = comments.student_id "
             + "WHERE lessons.id = " + lessonId;
@@ -76,6 +76,7 @@ public class CommentDAO extends Comment
             {
                 Comment comment = new Comment();
                 comment.setId(rs.getInt("lesson_id"));
+                comment.setStudentId(rs.getInt("student_id"));
                 comment.setStudentName(rs.getString("student_name"));
                 comment.setComment(rs.getString("comment"));
                 comment.setScore(rs.getInt("score"));

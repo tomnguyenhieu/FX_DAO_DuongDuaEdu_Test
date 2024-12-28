@@ -126,4 +126,28 @@ public class LessonDAO extends Lesson
         }
         return lesson;
     }
+
+    // Lấy các lessons theo lớp
+    public List<Lesson> getLessonsByClassId(Classes classObj)
+    {
+        List<Lesson> lessonList = new ArrayList<>();
+        String sql = "SELECT * FROM lessons WHERE class_id = " + classObj.getClassId();
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                Lesson lesson = new Lesson();
+                lesson.setId(rs.getInt("id"));
+                lesson.setClassId(rs.getInt("class_id"));
+                lesson.setTitle(rs.getString("title"));
+                lesson.setContent(rs.getString("content"));
+                lessonList.add(lesson);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return lessonList;
+    }
 }

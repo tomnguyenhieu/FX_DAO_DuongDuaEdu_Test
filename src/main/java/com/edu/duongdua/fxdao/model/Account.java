@@ -20,6 +20,9 @@ public class Account extends Model{
     private int fee;
     private String status;
 
+    private String time;
+    private int lessonCount;
+
     private String createdAt;
     private String updatedAt;
 
@@ -191,5 +194,21 @@ public class Account extends Model{
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getLessonCount() {
+        return lessonCount;
+    }
+
+    public void setLessonCount(int lessonCount) {
+        this.lessonCount = lessonCount;
     }
 }

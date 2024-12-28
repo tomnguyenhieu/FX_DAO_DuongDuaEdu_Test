@@ -9,28 +9,6 @@ public class Classes extends Model
     private String classTeacherName;
     private int classTotalStudents;
 
-    public Classes()
-    {
-        super();
-    }
-
-    public Classes(int classId, int classTeacherId, String className, int classDeleted)
-    {
-        super();
-        this.classId = classId;
-        this.classTeacherId = classTeacherId;
-        this.className = className;
-        this.classDeleted = classDeleted;
-    }
-
-    public Classes(String className, String classTeacherName, int classTotalStudents)
-    {
-        super();
-        this.className = className;
-        this.classTeacherName = classTeacherName;
-        this.classTotalStudents = classTotalStudents;
-    }
-
     public int getClassId() {
         return classId;
     }
