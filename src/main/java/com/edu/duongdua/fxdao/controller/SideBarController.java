@@ -128,7 +128,7 @@ public class SideBarController extends Main implements Initializable
 
         FXMLLoader fxmlLoader = null;
         try {
-            fxmlLoader = new FXMLLoader(getClass().getResource(sceneName + ".fxml"));
+            fxmlLoader = new FXMLLoader(Main.class.getResource("view/" + sceneName + ".fxml"));
             Parent root = fxmlLoader.load();
             contentPane.getChildren().removeAll();
             contentPane.getChildren().setAll(root);
