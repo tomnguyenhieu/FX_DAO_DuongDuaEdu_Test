@@ -70,6 +70,7 @@ public class DashboardStudentController extends Controller implements Initializa
         timeline.play();
     }
 
+    // Xử lí thêm giao diện
     private HBox addStudentInTop(int top, String name, String className, String address, int score){
         HBox hbox = new HBox();
         hbox.setPrefWidth(287);
@@ -156,13 +157,17 @@ public class DashboardStudentController extends Controller implements Initializa
         return vBox;
     }
 
+    // Xử lí chuẩn bị data
     private void topStudentSetup(){
         String latestMonth = lessonList.getLast().getTitle().substring(3);
         List<Account> topStudentInMonth = new ArrayList<Account>();
+        // Lưu điểm tương ứng với top
         int[] topStudentScore = new int[commentList.size()];
         int top = 1;
 
+        // Sắp xếp list comment theo điểm
         for(int i = 1; i < commentList.size(); i++){
+            // Insertion sort
             Comment key = commentList.get(i);
             int j = i-1;
 
@@ -174,13 +179,17 @@ public class DashboardStudentController extends Controller implements Initializa
         }
         for(Comment comment : commentList){
             if(lessonDAO.getLessonInfoById(comment.getLessonId()).getTitle().substring(3).equals(latestMonth)){
+                // Nếu comment trong tháng mới nhất
+                // Thêm học sinh vào top
                 topStudentInMonth.add(accountDAO.findStudentById(comment.getStudentId()));
+                // Thêm điểm vào top
                 topStudentScore[top] = comment.getScore();
                 top++;
             }
         }
         top = 1;
         for(Account student : topStudentInMonth){
+            // Lấy thông tin của học sinh tương ứng thứ hạng
             String name = student.getName();
             String className = classesDao.findByID(student.getClassId()).getClassName();
             String address = student.getAddress();
@@ -200,10 +209,13 @@ public class DashboardStudentController extends Controller implements Initializa
         for(Account student : studentList){
             int studentAge = student.getAge();
             if(studentAge <= 12){
+                // Tuổi dưới 12
                 ageUnder12Count++;
             }else if(studentAge <= 22){
+                // Tuổi dưới 22
                 ageUnder22Count++;
             }else {
+                // Tuổi trên 22
                 ageOver22Count++;
             }
         }
@@ -225,6 +237,7 @@ public class DashboardStudentController extends Controller implements Initializa
         int studentAgeSum = 0;
         int avgAge = 0;
         List<Account> studentList = accountDAO.getAllStudent();
+        // Tính tổng tuổi và số lượng học viên
         for(Account student : studentList){
             studentAgeSum += student.getAge();
             studentCount++;
@@ -239,6 +252,7 @@ public class DashboardStudentController extends Controller implements Initializa
         List<Account> studentList = accountDAO.getAllStudent();
         for(Account student : studentList){
             if(student.getGender().equals("Nam")){
+                // Nếu học sinh là nam
                 maleCount++;
             }else{
                 femaleCount++;
@@ -254,18 +268,23 @@ public class DashboardStudentController extends Controller implements Initializa
         XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
         List<String> monthArr = new ArrayList<>();
 
+        // Với mỗi lesson, đếm học sinh dựa trên comment
         for(Lesson lesson : lessonList){
             String month = lesson.getTitle().substring(3);
             int total_student = 0;
+            // Tạo list học sinh điểm kiểm tra trùng
             List<Integer> studentIdList = new ArrayList<>();
             for(Comment comment : commentList){
+                // Với mỗi comment hay học sinh của lesson
                 int studentId = comment.getStudentId();
                 if(comment.getLessonId() == lesson.getId() && !studentIdList.contains(studentId)){
+                    // Học sinh học lesson chưa được đếm
                     total_student++;
                     studentIdList.add(studentId);
                 }
             }
             if(!monthArr.contains(month)){
+                // Chưa có tháng của lesson hiện tại
                 monthArr.add(lesson.getTitle().substring(3));
                 dataSeries.getData().add(new XYChart.Data<>(month, total_student));
             }
@@ -277,11 +296,15 @@ public class DashboardStudentController extends Controller implements Initializa
             String name = classes.getClassName();
             int totalLesson = 0;
             int totalStudent = 0;
+
+            // Đếm học sinh
             for(Account account : studentsList){
                 if(account.getClassId() == classes.getClassId()){
                     totalStudent++;
                 }
             }
+
+            // Đếm số tiết
             for(Lesson lesson : lessonList){
                 if(lesson.getClassId() == classes.getClassId()){
                     totalLesson++;
@@ -291,6 +314,7 @@ public class DashboardStudentController extends Controller implements Initializa
         }
     }
 
+    // Hàm khởi tạo
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pChartSetup();
