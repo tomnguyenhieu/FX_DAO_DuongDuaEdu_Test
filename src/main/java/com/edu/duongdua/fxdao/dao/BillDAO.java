@@ -18,7 +18,7 @@ public class BillDAO extends Model {
     public List<Bill> getAllBill()
     {
         List<Bill> bills = new ArrayList<>();
-        String sql = "SELECT * FROM bills";
+        String sql = "SELECT * FROM bills ORDER BY time";
         PreparedStatement ps;
         try {
             ps = conn.prepareStatement(sql);
