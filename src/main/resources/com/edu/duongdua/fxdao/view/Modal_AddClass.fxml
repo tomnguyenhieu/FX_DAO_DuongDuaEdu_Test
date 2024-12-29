@@ -36,7 +36,7 @@
       </VBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="474.0" spacing="15.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="128.0" style="-fx-background-color: #30475E; -fx-font-style: #F5F5F5; -fx-background-radius: 10px;" text="Hủy" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#onActionCancel" prefHeight="47.0" prefWidth="128.0" style="-fx-background-color: #30475E; -fx-font-style: #F5F5F5; -fx-background-radius: 10px;" text="Hủy" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
@@ -44,7 +44,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="128.0" style="-fx-background-color: #30475E; -fx-background-radius: 10px;" text="Xác nhận" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#onActionConfirm" prefHeight="47.0" prefWidth="128.0" style="-fx-background-color: #30475E; -fx-background-radius: 10px;" text="Xác nhận" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
