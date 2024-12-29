@@ -349,7 +349,7 @@ public class ManageDiaryController extends Controller
         FXMLLoader loader;
         ConfirmUploadController confirmUploadController;
         try {
-            loader = new FXMLLoader(Main.class.getResource("view/ConfirmUploadScene.fxml"));
+            loader = new FXMLLoader(Main.class.getResource("view/Modal_ConfirmUpload.fxml"));
             Parent root = loader.load();
             confirmUploadController = loader.getController();
             confirmUploadController.setNameLabelText(file.getName());
@@ -362,15 +362,19 @@ public class ManageDiaryController extends Controller
             {
                 _stage.show();
                 _stage.setOnCloseRequest((event) -> {
-                    storeDiary(file, lesson);
-                    resetAllBtn(count);
-                    Button lessonBtn = (Button) lessonsContainer.getChildren().getLast();
-                    lessonBtn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
-                    lessonBtn.setTextFill(Color.WHITE);
-                    loadTable1Comment(lesson);
-                    loadTable2Comment(lesson);
-                    addTeacherBill(lesson);
-                    addStudentBill(file, lesson);
+                    isConfirm = confirmUploadController.isConfirm();
+                    if (isConfirm)
+                    {
+                        storeDiary(file, lesson);
+                        resetAllBtn(count);
+                        Button lessonBtn = (Button) lessonsContainer.getChildren().getLast();
+                        lessonBtn.setStyle("-fx-background-color: #F05454; -fx-font-size: 20");
+                        lessonBtn.setTextFill(Color.WHITE);
+                        loadTable1Comment(lesson);
+                        loadTable2Comment(lesson);
+                        addTeacherBill(lesson);
+                        addStudentBill(file, lesson);
+                    }
                 });
             } else
             {
