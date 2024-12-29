@@ -313,28 +313,4 @@ public class AccountDAO extends Account {
         }
         return teacher;
     }
-    public Account getTeacherLessonsPerMonth(int teacherId, int year)
-    {
-        Account teacher = new Account();
-        String sql = "SELECT a.id AS teacher_id, a.name AS teacher_name, "
-                + "MONTH(STR_TO_DATE(l.title, '%d/%m/%Y')) AS month, COUNT(*) AS total_lessons "
-                + "FROM lessons l JOIN classes c ON l.class_id = c.id JOIN accounts a "
-                + "ON c.teacher_id = a.id WHERE a.id = " +teacherId+ " AND l.title LIKE '%/" +year+ "' "
-                + "GROUP BY a.id, a.name, MONTH(STR_TO_DATE(l.title, '%d/%m/%Y')) ORDER BY a.id, month";
-        PreparedStatement ps;
-        try {
-            ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next())
-            {
-                teacher.setId(rs.getInt("teacher_id"));
-                teacher.setName(rs.getString("teacher_name"));
-                teacher.setTime(rs.getString("month"));
-                teacher.setLessonCount(rs.getInt("total_lessons"));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return teacher;
-    }
 }
