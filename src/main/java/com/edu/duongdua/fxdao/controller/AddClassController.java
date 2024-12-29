@@ -48,7 +48,7 @@ public class AddClassController extends Controller implements Initializable
     // Khởi tạo combo box tên các giáo viên có trong database
     public void initCBTeacherName()
     {
-        for (Account teacher : accountDAO.getAllTeacher())
+        for (Account teacher : accountDAO.getAllAccount(2))
         {
             if (teacher.getStatus().equals("Đang hoạt động"))
             {
@@ -73,7 +73,7 @@ public class AddClassController extends Controller implements Initializable
 
         if (cbTeachersName.getValue() != null)
         {
-            for (Account teacher : accountDAO.getAllTeacher())
+            for (Account teacher : accountDAO.getAllAccount(2))
             {
                 if (teacher.getName().equals(cbTeachersName.getValue()))
                 {
@@ -111,7 +111,7 @@ public class AddClassController extends Controller implements Initializable
             Classes classObj = classesDao.findByName(tmpClassName);
             classObj.setClassName(inputClass.getText());
 
-            for (Account teacher : accountDAO.getAllTeacher())
+            for (Account teacher : accountDAO.getAllAccount(2))
             {
                 if (cbTeachersName.getValue().equals(teacher.getName()))
                 {

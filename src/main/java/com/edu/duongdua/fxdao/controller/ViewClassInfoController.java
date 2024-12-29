@@ -44,7 +44,7 @@ public class ViewClassInfoController extends Controller
     public void renderTblStudents(String className)
     {
         final ObservableList<Account> data = FXCollections.observableArrayList();
-        List<Account> studentList = accountDAO.getAllStudent();
+        List<Account> studentList = accountDAO.getAllAccount(4);
         for (Account student : studentList)
         {
             if (student.getClassId() == classesDao.findByName(className).getClassId())

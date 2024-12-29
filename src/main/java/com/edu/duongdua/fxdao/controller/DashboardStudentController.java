@@ -162,7 +162,7 @@ public class DashboardStudentController extends Controller implements Initializa
         String latestMonth = lessonList.getLast().getTitle().substring(3);
         List<Account> topStudentInMonth = new ArrayList<Account>();
         // Lưu điểm tương ứng với top
-        int[] topStudentScore = new int[commentList.size()];
+        int[] topStudentScore = new int[commentList.size() + 1];
         int top = 1;
 
         // Sắp xếp list comment theo điểm
@@ -205,7 +205,7 @@ public class DashboardStudentController extends Controller implements Initializa
         int ageUnder12Count = 0;
         int ageUnder22Count = 0;
         int ageOver22Count = 0;
-        List<Account> studentList = accountDAO.getAllStudent();
+        List<Account> studentList = accountDAO.getAllAccount(4);
         for(Account student : studentList){
             int studentAge = student.getAge();
             if(studentAge <= 12){
@@ -236,7 +236,7 @@ public class DashboardStudentController extends Controller implements Initializa
         int studentCount = 0;
         int studentAgeSum = 0;
         int avgAge = 0;
-        List<Account> studentList = accountDAO.getAllStudent();
+        List<Account> studentList = accountDAO.getAllAccount(4);
         // Tính tổng tuổi và số lượng học viên
         for(Account student : studentList){
             studentAgeSum += student.getAge();
@@ -249,7 +249,7 @@ public class DashboardStudentController extends Controller implements Initializa
     private void genderSetup(){
         int maleCount = 0;
         int femaleCount = 0;
-        List<Account> studentList = accountDAO.getAllStudent();
+        List<Account> studentList = accountDAO.getAllAccount(4);
         for(Account student : studentList){
             if(student.getGender().equals("Nam")){
                 // Nếu học sinh là nam

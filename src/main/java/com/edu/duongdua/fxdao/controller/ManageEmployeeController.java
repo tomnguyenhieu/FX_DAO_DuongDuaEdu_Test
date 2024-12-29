@@ -146,7 +146,7 @@ public class ManageEmployeeController extends Controller implements Initializabl
     public void refreshTableEmployee() {
         final ObservableList<Account> EmployeeList = FXCollections.observableArrayList();
 
-        List<Account> employeeList = accountDAO.getAllEmployee();
+        List<Account> employeeList = accountDAO.getAllAccount(3);
         EmployeeList.addAll(employeeList);
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -229,7 +229,7 @@ public class ManageEmployeeController extends Controller implements Initializabl
         billStkPane.setVisible(false);
         if(employee != null){
             int employeeId = employee.getId();
-            accountDAO.deleteEmployee(employeeId);
+            accountDAO.deleteAccountById(employeeId);
             refreshTableEmployee();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);

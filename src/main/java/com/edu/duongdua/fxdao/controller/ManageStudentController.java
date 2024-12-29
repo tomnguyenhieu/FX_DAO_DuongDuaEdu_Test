@@ -155,7 +155,7 @@ public class ManageStudentController extends Controller implements Initializable
     }
     public void refreshStudentTable() {
         final ObservableList<Account> StudentList = FXCollections.observableArrayList();
-        List<Account> studentsList = accountDAO.getAllStudent();
+        List<Account> studentsList = accountDAO.getAllAccount(4);
         for (Account student : studentsList){
             for (Classes accClass : classesList){
                 if (student.getClassId() == accClass.getClassId()){
@@ -244,7 +244,7 @@ public class ManageStudentController extends Controller implements Initializable
         student = studentsTable.getSelectionModel().getSelectedItem();
         if(student != null){
             int studentId = student.getId();
-            accountDAO.deleteStudent(studentId);
+            accountDAO.deleteAccountById(studentId);
             refreshStudentTable();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);

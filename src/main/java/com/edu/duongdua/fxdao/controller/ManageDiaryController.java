@@ -310,7 +310,7 @@ public class ManageDiaryController extends Controller
     {
         for (Comment comment : readExcelComment(file))
         {
-            for (Account student : accountDAO.getAllStudent())
+            for (Account student : accountDAO.getAllAccount(4))
             {
                 if (comment.getStudentId() == student.getId())
                 {

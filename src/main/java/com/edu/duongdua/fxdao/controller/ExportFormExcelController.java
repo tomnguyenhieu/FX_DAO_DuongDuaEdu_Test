@@ -93,7 +93,7 @@ public class ExportFormExcelController extends Controller implements Initializab
                     labelScore.setCellValue("Điểm số");
 
                     List<Account> studentsList = new ArrayList<>();
-                    for (Account student : accountDAO.getAllStudent())
+                    for (Account student : accountDAO.getAllAccount(4))
                     {
                         if (student.getClassId() == _class.getClassId())
                         {
