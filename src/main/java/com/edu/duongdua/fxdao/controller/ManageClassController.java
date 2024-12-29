@@ -52,14 +52,14 @@ public class ManageClassController extends Controller implements Initializable
 
     // Xử lý logic
     // Khởi tạo class box
-    public void initClassBox(String className, String teacherName, int totalStudents, int classStatus)
+    public void initClassBox(Classes classObj, int classStatus)
     {
         VBox vbox = new VBox();
         vbox.setMinSize(240, 150);
         vbox.setPrefSize(240, 150);
         vbox.setStyle("-fx-background-color:  #30475E; -fx-background-radius: 8");
 
-        Label label = new Label(className);
+        Label label = new Label(classObj.getClassName());
         label.setMinSize(240, 46);
         label.setPrefSize(240, 46);
         label.setFont(new Font("Roboto", 24));
@@ -86,14 +86,19 @@ public class ManageClassController extends Controller implements Initializable
         vboxText.setPadding(new Insets(0, 0, 0, 12));
         vboxText.setStyle("-fx-background-color:  #ffffff; -fx-background-radius: 6");
         HBox.setMargin(vboxText, new Insets(10, 0, 10, 10));
+        if (classStatus == 1)
+        {
+            vboxText.setCursor(Cursor.HAND);
+            vboxText.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClickViewClassInfo);
+        }
 
         Label teacherNameLabel = new Label();
-        teacherNameLabel.setText("Giáo viên: " + teacherName);
+        teacherNameLabel.setText("Giáo viên: " + classObj.getClassTeacherName());
         teacherNameLabel.setMinSize(190, 41);
         teacherNameLabel.setFont(new Font(14));
 
         Label totalStudentsLabel = new Label();
-        totalStudentsLabel.setText("Học sinh: " + totalStudents + " em");
+        totalStudentsLabel.setText("Học sinh: " + classObj.getClassTotalStudents() + " em");
         totalStudentsLabel.setMinSize(190, 41);
         totalStudentsLabel.setFont(new Font(14));
 
@@ -136,13 +141,22 @@ public class ManageClassController extends Controller implements Initializable
         tilePane.getChildren().add(vbox);
     }
 
+    // Khởi tạo combo box chọn classes theo status
+    public void initComboBoxStatus()
+    {
+        classStatusCb.getItems().add("Đang hoạt động");
+        classStatusCb.getItems().add("Dừng hoạt động");
+
+        classStatusCb.setValue("Đang hoạt động");
+    }
+
     // Hiển thị lớp có trong database
     public void displayClass(int classStatus)
     {
         List<Classes> classesInfo = classesDao.getClassesInfo(classStatus);
         for (Classes _class : classesInfo)
         {
-            initClassBox(_class.getClassName(), _class.getClassTeacherName(), _class.getClassTotalStudents(), classStatus);
+            initClassBox(_class, classStatus);
         }
     }
 
@@ -165,6 +179,34 @@ public class ManageClassController extends Controller implements Initializable
                 tilePane.getChildren().clear();
                 displayClass(1);
             });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Hiển thị thông tin chi tiết của lớp
+    public void onMouseClickViewClassInfo(MouseEvent event)
+    {
+        VBox vBox = (VBox) event.getSource();
+        Label teacherNameLabel = (Label) vBox.getChildren().getFirst();
+        String teacherName = teacherNameLabel.getText().substring(11);
+        HBox hBox = (HBox) vBox.getParent();
+        VBox vBox1 = (VBox) hBox.getParent();
+        Label classNameLabel = (Label) vBox1.getChildren().getFirst();
+        String className = classNameLabel.getText();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/Modal_ViewClassInfo.fxml"));
+            Parent root = loader.load();
+            ViewClassInfoController viewClassInfoController = loader.getController();
+            viewClassInfoController.initClassInfo(className, teacherName);
+            viewClassInfoController.renderTblStudents(className);
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -289,7 +331,7 @@ public class ManageClassController extends Controller implements Initializable
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        classStatusCb.getItems().add("Đang hoạt động");
-        classStatusCb.getItems().add("Dừng hoạt động");
+        initComboBoxStatus();
+        displayClass(1);
     }
 }
