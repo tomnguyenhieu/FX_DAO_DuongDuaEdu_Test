@@ -19,10 +19,8 @@ public class Account extends Model{
     private String pPhone;
     private int fee;
     private String status;
-
     private String time;
     private int lessonCount;
-
     private String createdAt;
     private String updatedAt;
 

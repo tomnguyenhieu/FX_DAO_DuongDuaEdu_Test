@@ -14,8 +14,8 @@ public class Bill {
     private int total_price;
     private String status;
     private int type;
-
-
+    private int countMembers;
+    private double avgAge;
 
     public int getQuantity() {
         return quantity;
@@ -120,5 +120,19 @@ public class Bill {
         this.type = type;
     }
 
+    public int getCountMembers() {
+        return countMembers;
+    }
 
+    public void setCountMembers(int countMembers) {
+        this.countMembers = countMembers;
+    }
+
+    public double getAvgAge() {
+        return avgAge;
+    }
+
+    public void setAvgAge(double avgAge) {
+        this.avgAge = avgAge;
+    }
 }

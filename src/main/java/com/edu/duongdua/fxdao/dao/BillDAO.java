@@ -112,4 +112,28 @@ public class BillDAO extends Model {
         }
         return bill;
     }
+
+    public List<Bill> getBillStatistical(int role)
+    {
+        List<Bill> bills = new ArrayList<>();
+        String sql = "SELECT b.time AS month, COUNT(DISTINCT a.id) AS count_members, "
+                + "AVG(a.age) AS avg_age FROM bills b JOIN accounts a ON b.account_id = a.id "
+                + "WHERE a.role = " +role+ " GROUP BY b.time ORDER BY b.time";
+        PreparedStatement ps;
+        try {
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next())
+            {
+                Bill bill = new Bill();
+                bill.setTime(rs.getString("month"));
+                bill.setCountMembers(rs.getInt("count_members"));
+                bill.setAvgAge(rs.getDouble("avg_age"));
+                bills.add(bill);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return bills;
+    }
 }

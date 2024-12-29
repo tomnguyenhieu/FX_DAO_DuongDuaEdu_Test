@@ -79,7 +79,7 @@ public class SideBarController extends Main implements Initializable
                 sceneName = "Scene_ManageEmployee";
                 break;
             case "dbTeachersStaffsBtn":
-                sceneName = "Scene_DBTeachersStaffs";
+                sceneName = "Scene_DashboardTeacherEmployee";
                 break;
             case "dbChiBtn":
                 sceneName = "Scene_DashboardExpense";
