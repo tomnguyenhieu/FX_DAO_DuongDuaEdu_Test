@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ import java.util.ResourceBundle;
 
 public class DashboardTeacherEmployeeController extends Controller implements Initializable
 {
+    private static final Logger log = LoggerFactory.getLogger(DashboardTeacherEmployeeController.class);
     private LocalDate today = LocalDate.now();
     private Integer currentMonth = today.getMonthValue();
     private Integer currentYear = today.getYear();
@@ -156,16 +159,30 @@ public class DashboardTeacherEmployeeController extends Controller implements In
     // Hàm chọn giáo viên trong table các giáo viên trong năm được chọn
     public void onMouseClickRenderTeacherLessonsChart()
     {
+        barChart.getData().clear();
         int year = cbYears.getValue();
         if (tblTeachers.getSelectionModel().getSelectedItem() != null)
         {
-            Account teacher = accountDAO.getTeacherLessonsPerMonth(tblTeachers.getSelectionModel().getSelectedItem().getId(), year);
-            if (teacher.getId() != 0)
+            List<Bill> teacherLessons = billDAO.getTeacherBillDataById(tblTeachers.getSelectionModel().getSelectedItem().getId());
+            List<Bill> teacherLessonsByYear = new ArrayList<>();
+            XYChart.Series<String, Number> dataSeriesLessons = new XYChart.Series<>();
+            dataSeriesLessons.setName("Số lượng lessons");
+            for (Bill bill : teacherLessons)
             {
-                XYChart.Series<String, Number> dataSeriesLessons = new XYChart.Series<>();
-                dataSeriesLessons.getData().add(new XYChart.Data<>(teacher.getTime(), teacher.getLessonCount()));
-                dataSeriesLessons.setName("Số lượng lessons");
-                barChart.getData().clear();
+                if (Integer.parseInt(bill.getTime().substring(3)) == year)
+                {
+                    teacherLessonsByYear.add(bill);
+                }
+            }
+            if (!teacherLessonsByYear.isEmpty())
+            {
+                for (Bill bill : teacherLessonsByYear)
+                {
+                    if (bill.getAccount_id() == tblTeachers.getSelectionModel().getSelectedItem().getId() && bill.getLessonQty() != 0)
+                    {
+                        dataSeriesLessons.getData().add(new XYChart.Data<>(bill.getTime(), bill.getLessonQty()));
+                    }
+                }
                 barChart.getData().add(dataSeriesLessons);
             } else
             {
