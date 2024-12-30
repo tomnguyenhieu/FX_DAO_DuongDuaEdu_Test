@@ -87,6 +87,9 @@ public class SideBarController extends Main implements Initializable
             case "dbStudentsBtn":
                 sceneName = "Scene_DashboardStudent";
                 break;
+            case "dbEarningBtn":
+                sceneName = "Scene_DashboardEarning";
+                break;
         }
         return sceneName;
     }
